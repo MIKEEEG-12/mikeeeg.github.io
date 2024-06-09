@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container, .student-list {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ccbb26;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ccbb26;
+        }
+        button {
+            background-color: #ccbb26;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #ccbb26;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Registration</h1>
+        <form id="registrationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="birthday">Birthday:</label>
+            <input type="date" id="birthday" name="birthday" required>
+
+            <label for="contact">Contact Number:</label>
+            <input type="tel" id="contact" name="contact" pattern="\d{11}" title="Contact number must be 11 digits" required>
+
+            <label for="course">Course:</label>
+            <select id="course" name="course" required>
+                <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
+                <option value="Bachelor of Science in Business Administration">Bachelor of Science in Business Administration</option>
+                <option value="Bachelor of Science in Entrepreneurship">Bachelor of Science in Entrepreneurship</option>
+                <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
+                <option value="Bachelor of Elementary Education">Bachelor of Elementary Education</option>
+                <option value="Bachelor of Secondary Education">Bachelor of Secondary Education</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div class="student-list">
+        <h2>Registered Students</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Birthday</th>
+                    <th>Contact</th>
+                    <th>Course</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <!-- Student rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const email = document.getElementById('email').value;
+            const birthday = document.getElementById('birthday').value;
+            const contact = document.getElementById('contact').value;
+            const course = document.getElementById('course').value;
+
+            // Create student object
+            const student = {
+                name: name,
+                age: age,
+                email: email,
+                birthday: birthday,
+                contact: contact,
+                course: course
+            };
+
+            // Get existing students from localStorage
+            let students = localStorage.getItem('students');
+            if (students) {
+                students = JSON.parse(students);
+            } else {
+                students = [];
+            }
+
+            // Add new student to the array
+            students.push(student);
+
+            // Save updated students array back to localStorage
+            localStorage.setItem('students', JSON.stringify(students));
+
+            // Clear the form
+            document.getElementById('registrationForm').reset();
+
+            // Update the student list display
+            displayStudents();
+
+            alert('Student registered successfully!');
+        });
+
+        function displayStudents() {
+            const studentTableBody = document.getElementById('studentTableBody');
+            studentTableBody.innerHTML = '';
+
+            // Get students from localStorage
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+
+            // Display each student in the table
+            students.forEach((student) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.age}</td>
+                    <td>${student.email}</td>
+                    <td>${student.birthday}</td>
+                    <td>${student.contact}</td>
+                    <td>${student.course}</td>
+                `;
+                studentTableBody.appendChild(row);
+            });
+        }
+
+        // Display students on page load
+        displayStudents();
+    </script>
+</body>
+</html>
